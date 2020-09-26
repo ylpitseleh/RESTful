@@ -1,7 +1,7 @@
 server:
   port: 8080
 
-logging:
+logging: # Log 관련 설정. DEBUG로 출력하겠다는 옵션
   level:
     org.springframework: DEBUG
 

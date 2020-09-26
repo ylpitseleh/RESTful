@@ -1,5 +1,8 @@
-package com.example.restfulwebservice.user;
+package com.example.restfulwebservice.user.controller;
 
+import com.example.restfulwebservice.user.UserNotFoundException;
+import com.example.restfulwebservice.user.domain.User;
+import com.example.restfulwebservice.user.service.UserDaoService;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -17,16 +20,18 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class UserController {
     private UserDaoService service;
 
-    public UserController(UserDaoService service) {
+    public UserController(UserDaoService service) { // 생성자를 통한 의존성 주입 (@Autowired 써도 되지만 생성자가 더 좋음)
         this.service = service;
     }
 
+    // 전체 사용자 목록 조회
     @GetMapping("/users")
     public List<User> retrieveAllUsers() {
         return service.findAll();
     }
 
-    // GET /users/1 or /users/10 -> String
+    // 사용자 1명 조회
+    // GET /users/1, /users/2 -> 1, 2는 서버측에 문자열(String)으로 전달됨
     @GetMapping("/users/{id}")
     public Resource<User> retrieveUser(@PathVariable int id) {
         User user = service.findOne(id);
@@ -46,7 +51,8 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         User savedUser = service.save(user);
-
+        // 서버로부터 요청 결과값에 적절한 상태 코드를 반환해주는 것이 좋은 API 설계 방식.
+        // HTTP Status Code 제어 (GET(200)일 때, POST(201)일 때 성공시 다른 상태 코드)
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(savedUser.getId())

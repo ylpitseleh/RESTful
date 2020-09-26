@@ -1,7 +1,5 @@
 package com.example.restfulwebservice.helloworld;
 
-import com.example.restfulwebservice.user.User;
-import com.example.restfulwebservice.user.UserDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Locale;
 
-@RestController
+@RestController // @Controller + @ResponseBody
 public class HelloWorldController {
 
     @Autowired
@@ -25,13 +23,12 @@ public class HelloWorldController {
         return "Hello World";
     }
 
-    // alt + enter
     @GetMapping(path = "/hello-world-bean")
     public HelloWorldBean helloWorldBean() {
         return new HelloWorldBean("Hello World");
     }
 
-    @GetMapping(path = "/hello-world-bean/path-variable/{name}")
+    @GetMapping(path = "/hello-world-bean/path-variable/{name}") // path variable = 가변 변수
     public HelloWorldBean helloWorldBean(@PathVariable String name) {
         return new HelloWorldBean(String.format("Hello World, %s", name));
     }
